@@ -155,6 +155,12 @@ class DM_cargos(Base):
     cod_cargo = Column(Integer, primary_key=True)
     dsc_carreira = Column(String(100))
     dsc_cargo = Column(String(100))
+    
+    def __init__(self, cargo : Cargos, carreira : Carreiras) -> None:
+        super().__init__()
+        self.cod_cargo = cargo.cod_cargo
+        self.dsc_carreira = carreira.dsc_carreira
+        self.dsc_cargo = cargo.dsc_cargo
 
 class DM_faixas_etarias(Base):
 
@@ -165,7 +171,14 @@ class DM_faixas_etarias(Base):
     dsc_faixa = Column(String(100))
     idade_inicial = Column(Integer)
     idade_final = Column(Integer)
-
+    
+    def __init__(self, dsc_faixa, idade_inicial, idade_final, cod) -> None:
+        super().__init__()
+        self.cod_faixa = cod
+        self.dsc_faixa = dsc_faixa
+        self.idade_inicial = idade_inicial
+        self.idade_final = idade_final
+        
 class DM_rubricas(Base):
     
     __tablename__ = 'dm_rubricas'
@@ -176,6 +189,13 @@ class DM_rubricas(Base):
     dsc_rubrica = Column(String(100))
     tipo_rubrica = Column(String(100))
 
+    def __init__(self, rubricas : Rubricas, grupos_rubricas : Grupos_rubricas) -> None:
+        super().__init__()
+        self.cod_rubrica = rubricas.cod_rubrica
+        self.dsc_grupo = grupos_rubricas.dsc_grupo
+        self.dsc_rubrica = rubricas.dsc_rubrica
+        self.tipo_rubrica = rubricas.tpo_rubrica
+    
 class DM_setores(Base):
     
     __tablename__ = 'dm_setores'
@@ -187,6 +207,14 @@ class DM_setores(Base):
     uf_unidade = Column(String(2))
     dsc_setor = Column(String(100))
 
+    def __init__(self, setores : Setores, unidade : Unidades) -> None:
+        super().__init__()
+        self.cod_setor = setores.cod_setor
+        self.dsc_unidade = unidade.dsc_und
+        self.cidade_unidade = unidade.cid_und
+        self.uf_unidade = unidade.uf_und
+        self.dsc_setor = setores.dsc_setor
+
 class DM_tempos_folhas(Base):
     
     __tablename__ = 'dm_tempos_folhas'
@@ -195,16 +223,30 @@ class DM_tempos_folhas(Base):
     id_ano_mes = Column(Integer, primary_key=True)
     ano = Column(Integer)
     mes = Column(Integer)
-
+    
+    def __init__(self, folhas_pagamentos : Folhas_pagamentos, id) -> None:
+        super().__init__()
+        self.id_ano_mes = id
+        self.ano = folhas_pagamentos.ano
+        self.mes = folhas_pagamentos.mes
+        
 class DM_tempos_servicos(Base):
     
     __tablename__ = 'dm_tempos_servicos'
     __table_args__ = ({"schema": "folhadw"})
 
-    cod_tempo_servicos = Column(Integer, primary_key=True)
-    dsc_tempo_servicos = Column(String(100))
+    cod_tempo_serv = Column(Integer, primary_key=True)
+    dsc_tempo_serv = Column(String(100))
     ano_inicial = Column(Integer)
     ano_final = Column(Integer)
+    
+    def __init__(self, colaborador : Colaboradores, cod) -> None:
+        super().__init__()
+        self.cod_tempo_serv = cod
+        self.dsc_tempo_serv = "Tempo de serviço na empresa"
+        self.ano_inicial = colaborador.dat_admissao.year
+        # não tem de onde tirar a informação ano final do operacional
+        self.ano_final = 9999
 
 class FT_lancamentos(Base):
     
@@ -221,6 +263,18 @@ class FT_lancamentos(Base):
     valor_bruto = Column(Float)
     valor_desconto = Column(Float)
     valor_liquido = Column(Float)
-
+    
+    def __init__(self, cod_rubrica, cod_setor, cod_cargo, cod_faixa, cod_tempo_serv, id_ano_mes, total_lanc, valor_bruto, valor_desconto, valor_liquido) -> None:
+        super().__init__()
+        self.cod_rubrica = cod_rubrica
+        self.cod_setor = cod_setor
+        self.cod_cargo = cod_cargo
+        self.cod_faixa = cod_faixa
+        self.cod_tempo_serv = cod_tempo_serv
+        self.id_ano_mes = id_ano_mes
+        self.total_lanc = total_lanc
+        self.valor_bruto = valor_bruto
+        self.valor_desconto = valor_desconto
+        self.valor_liquido = valor_liquido
 
     
