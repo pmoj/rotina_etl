@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from sqlalchemy import Column, ForeignKey, Integer, String, Date, Float
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -25,7 +24,9 @@ class Cargos(Base):
     cod_cargo = Column(Integer, primary_key=True)
     dsc_cargo = Column(String(100))
     cod_carreira = Column(Integer, ForeignKey("carreiras.cod_carreira"))
-
+    
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
 
 class Carreiras(Base):
 
@@ -34,6 +35,9 @@ class Carreiras(Base):
     
     cod_carreira = Column(Integer, primary_key=True)
     dsc_carreira = Column(String(100))
+
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
 
 class Colaboradores(Base):
 
@@ -44,7 +48,10 @@ class Colaboradores(Base):
     nom_colab = Column(String(100))
     dat_nasc = Column(Date)
     dat_admissao = Column(Date)
-    
+
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
+        
 class Evolucoes_funcionais(Base):
     
     __tablename__ = 'evolucoes_funcionais'
@@ -54,7 +61,10 @@ class Evolucoes_funcionais(Base):
     dat_ini = Column(Date, primary_key=True)
     cod_setor = Column(Integer)
     cod_cargo = Column(Integer)
-    
+
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
+        
 class Folhas_pagamentos(Base):
     
     __tablename__ = 'folhas_pagamentos'
@@ -65,6 +75,9 @@ class Folhas_pagamentos(Base):
     tpo_folha = Column(String(1), primary_key=True)
     dsc_folha = Column(String(100))
 
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
+    
 class Lancamentos(Base):
     
     __tablename__ = 'lancamentos'
@@ -78,7 +91,9 @@ class Lancamentos(Base):
     dat_lanc = Column(Date)
     val_lanc = Column(Float)
 
-
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
+    
 class Grupos_rubricas(Base):
     
     __tablename__ = 'grupos_rubricas'
@@ -86,6 +101,9 @@ class Grupos_rubricas(Base):
                                                                                                                                       
     cod_grupo = Column(Integer, primary_key=True)
     dsc_grupo = Column(String(100))
+
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
 
 class Rubricas(Base):
     
@@ -96,6 +114,9 @@ class Rubricas(Base):
     dsc_rubrica = Column(String(100))
     tpo_rubrica = Column(String(1))
     cod_grupo = Column(Integer)
+
+    def __getattribute__(self, __name: str):
+            return super().__getattribute__(__name)
     
 class Setores(Base):
 
@@ -106,6 +127,9 @@ class Setores(Base):
     cod_und = Column(Integer)
     cod_colab_chefe = Column(Integer)
 
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
+    
 class Unidades(Base):
     
     __tablename__ = 'unidades'
@@ -116,6 +140,8 @@ class Unidades(Base):
     cid_und = Column(String(40))
     uf_und = Column(String(2))
 
+    def __getattribute__(self, __name: str):
+        return super().__getattribute__(__name)
 
 '''
 Classes para o banco folhadw (Dimensional)

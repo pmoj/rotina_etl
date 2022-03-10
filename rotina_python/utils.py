@@ -1,3 +1,4 @@
+import traceback
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, database_exists
 
@@ -14,4 +15,21 @@ def create_my_engine(settings):
     return get_engine(settings['user'], settings['psswd'], settings['host'], settings['port'], settings['db'])
 
     
+def get_folha():    
     
+    from models import session
+    try:
+        folha_dict = {
+            "unidades" : [],
+            "setores" : [],
+            "carreiras" : [],
+            "cargos" : [],
+            "rubricas" : [],
+            "grupos_rubricas" : [],
+            "colaboradores" : [],
+            "evolucoes_funcionais" : [],
+            "lancamentos" : [],
+            "folhas_pagamentos" : []
+        }
+    except Exception as e:
+        traceback(e)
