@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  database:
+    container_name: postgresdb
+    build:
+      context: ./docker/db
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - TZ=America/Fortaleza
+    ports:
+      - "5433:5433"
+    expose:
+      - "5433"
+    env_file:
+      - ./docker/db/database.env # configure postgres
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+    command: -p 5433
+
+volumes:
+  database-data:
+    external: 
+      name: postgresdb    
