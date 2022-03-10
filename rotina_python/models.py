@@ -246,7 +246,7 @@ class DM_tempos_servicos(Base):
         self.dsc_tempo_serv = "Tempo de serviço na empresa"
         self.ano_inicial = colaborador.dat_admissao.year
         # não tem de onde tirar a informação ano final do operacional
-        self.ano_final = 9999
+        self.ano_final = 2022
 
 class FT_lancamentos(Base):
     

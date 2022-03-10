@@ -1,3 +1,6 @@
+from inspect import Traceback
+
+import idna
 from models import (Colaboradores, 
                     Evolucoes_funcionais, 
                     Folhas_pagamentos, 
@@ -16,7 +19,6 @@ from models import (Colaboradores,
                     DM_tempos_servicos,
                     FT_lancamentos, 
                     Base, engine, session)
-import traceback
 
 def get_folha():    
     
@@ -35,7 +37,7 @@ def get_folha():
                "folhas_pagamentos" : [x for x in session.query(Folhas_pagamentos).all()]
           }
      except Exception as e:
-         traceback(e)     
+         Traceback(e)     
      
      return folha_dict
 
@@ -64,7 +66,7 @@ def set_folhadw(folha_dict : dict):
           session.add(DM_faixas_etarias("Até 21 anos",18,21,1))
           session.add(DM_faixas_etarias("De 21 até 30 anos",21,30,2))
           session.add(DM_faixas_etarias("De 31 até 45 anos",31,45,3))
-          session.add(DM_faixas_etarias("Acima de 45 anos",45,70,4))
+          session.add(DM_faixas_etarias("Acima de 45 anos",45,99,4))
           
           #DM_rubricas 
           for grupo in folha_dict["grupos_rubricas"]:
@@ -97,17 +99,55 @@ def set_folhadw(folha_dict : dict):
                col = DM_tempos_servicos(colab,i)
                folhadw_dict["dm_tempos_servicos"].append(col)
                session.add(col)
+          
+          #FT_lancamentos         
+          l : Lancamentos
+          for l in folha_dict["lancamentos"]:
                
-          session.commit()
-          
-          #FT_lancamentos
-          
-          
+               cod_rubrica = l.cod_rubrica
+               
+               cod_colab = l.cod_colab
+               
+               evo : Evolucoes_funcionais = session.query(Evolucoes_funcionais).filter_by(cod_colab=cod_colab).first()
+               cod_setor = evo.cod_setor
+               cod_cargo = evo.cod_cargo
+               
+               col : Colaboradores = session.query(Colaboradores).filter_by(cod_colab=cod_colab).first()
+               dat = 2022 - col.dat_nasc.year
+               d : DM_faixas_etarias
+               
+               cod_faixa = 1
+               for d in folhadw_dict["dm_faixas_etarias"]:
+                    if d.idade_inicial <= dat and d.idade_final >= dat:
+                         cod_faixa = d.cod_faixa
+               
+               cod_tempo_serv = 1
+               x : DM_tempos_servicos
+               for x in folhadw_dict["dm_tempos_servicos"]:
+                    if col.dat_admissao.year == x.ano_inicial:
+                         cod_tempo_serv = x.cod_tempo_serv               
+               
+               id_ano_mes = 1
+               am : DM_tempos_folhas
+               for am in folhadw_dict["dm_tempos_folhas"]:
+                    if am.ano == l.dat_lanc.year and am.mes == l.dat_lanc.month:
+                         id_ano_mes = am.id_ano_mes
+               
+               total_lanc = l.val_lanc
+               
+               valor_bruto = 1000
+               valor_liquido = 1000
+               valor_desconto = 0
+               
+               folhadw_dict["ft_lancamentos"].append(FT_lancamentos(cod_rubrica, cod_setor, cod_cargo, cod_faixa, cod_tempo_serv, id_ano_mes, total_lanc, valor_bruto, valor_liquido, valor_desconto))
+               session.add(FT_lancamentos(cod_rubrica, cod_setor, cod_cargo, cod_faixa, cod_tempo_serv, id_ano_mes, total_lanc, valor_bruto, valor_liquido, valor_desconto))
 
+          session.commit()
           print([x.__getattribute__("dsc_cargo") for x in folhadw_dict["dm_cargos"]])
-     
+
+          
      except Exception as e:
-          traceback(e)
+          Traceback(e)
           
      print("foir")
      
